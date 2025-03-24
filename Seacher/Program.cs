@@ -23,9 +23,9 @@ namespace Seacher
                 {
                     services.AddSingleton<App>();
                     services.AddSingleton<MainWindow>();
-                    services.AddSingleton<AddTabletWindow>();
-                    services.AddSingleton<DBConectionWindow>();
-                    services.AddSingleton<SetingsWindow>();
+                    services.AddTransient<AddTabletWindow>();
+                    services.AddTransient<DBConectionWindow>();
+                    services.AddTransient<SetingsWindow>();
 
                     services.AddTransient<AddTabletWindowViewModel>();
                     services.AddTransient<DBConectionWindowViewModel>();

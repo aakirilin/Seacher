@@ -214,6 +214,8 @@ namespace Seacher.Common
                 .OfType<FieldsEnttiy>()
                 .ToArray();
 
+            result.DBTables = new List<DBTable>();
+
             foreach ( var tablet in tablets)
             {
                 var t = (DBTable)tablet;

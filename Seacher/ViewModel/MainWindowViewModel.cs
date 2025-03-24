@@ -45,8 +45,11 @@ namespace Seacher.ViewModel
             set
             {
                 SetProperty(ref selectedIndex, value);
-                SelectedTableName = DBTablesNames[selectedIndex];
-                OnPropertyChanged(nameof(SelectedTableName));
+                if (value >= 0 && value < DBTablesNames.Count)
+                {
+                    SelectedTableName = DBTablesNames[selectedIndex];
+                    OnPropertyChanged(nameof(SelectedTableName));
+                }
             }
         }
 
@@ -67,6 +70,7 @@ namespace Seacher.ViewModel
             set
             {
                 SetProperty(ref selectedTableTitle, value);
+
             }
         }
 
@@ -149,6 +153,7 @@ namespace Seacher.ViewModel
         public MainWindowViewModel(AppSettings appSettings, IServiceProvider serviceProvider)
         {
             this.appSettings = appSettings;
+            SelectedTableTitle = appSettings.SelectTableName;
             this.serviceProvider = serviceProvider;
             sQLiteAdapter = SQLAdapter.Create(appSettings.DBMSType, appSettings.ConnectionString);
 
@@ -161,14 +166,13 @@ namespace Seacher.ViewModel
 
             OpenSettingsCommand = new Command((p) =>
             {
-                var window = serviceProvider.GetService<SetingsWindow>();
+                var window = serviceProvider.GetRequiredService<SetingsWindow>();
                 window.Closed += (object? sender, EventArgs e) =>
                 {
                     LoadSettings();
                 };
 
                 window.ShowDialog();
-                LoadSettings();
                 Data = null;
             });
 
