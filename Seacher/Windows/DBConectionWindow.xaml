@@ -1,0 +1,36 @@
+﻿<Window x:Class="Seacher.Windows.DBConectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Seacher.Windows"
+        mc:Ignorable="d"
+        Title="Подключение к базе" 
+        xmlns:vm ="clr-namespace:Seacher.ViewModel"
+        Height="200" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0">СУБД</Label>
+        <Label Grid.Row="1">
+            <TextBlock>Строка<LineBreak/>подключения</TextBlock>
+        </Label>
+
+        <ComboBox Grid.Row="0" Grid.Column="1" 
+                  ItemsSource="{Binding DBMSNames}"
+                  SelectedItem="{Binding SelectedDBMSName}">
+        </ComboBox>
+        <TextBox Grid.Column="1" Grid.Row="1" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding ConnectionString}"></TextBox>
+        <Button Grid.Column="0" Grid.Row="5" Command="{Binding TestCommand}">Тест</Button>
+    </Grid>
+</Window>

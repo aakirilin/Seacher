@@ -1,0 +1,56 @@
+﻿<Window x:Class="Seacher.Windows.SetingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Seacher.Windows"
+        xmlns:vm="clr-namespace:Seacher.ViewModel"
+        xmlns:m="clr-namespace:Seacher.Models"
+        mc:Ignorable="d"
+        Title="Настройки" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" /> 
+            <RowDefinition Height="*" /> 
+            <RowDefinition Height="25" /> 
+        </Grid.RowDefinitions>
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Сохранить" Command="{Binding SaveCommand}" />
+            </MenuItem>
+            <MenuItem Header="Строка подключения" Command="{Binding OpenCStringWindowCommand}"/>
+            <MenuItem Header="Заполнить из БД" Command="{Binding GetShemaCommand}"/>
+        </Menu>
+        <DataGrid  Grid.Row="1" AutoGenerateColumns="False"
+                   ItemsSource="{Binding DBTables}" 
+                   SelectedItem="{Binding SelectedTablet}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Название"/>
+                <DataGridTextColumn Binding="{Binding Title}" Header="Имя таблици" />
+                <DataGridTextColumn Binding="{Binding Description}" Header="Описание" />
+                <DataGridTextColumn Binding="{Binding RelationToMainTable}" Header="Связь" />
+                <DataGridTextColumn Binding="{Binding MainTable}" Header="Основная таблица" />
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid 
+            Grid.Row="1" Grid.Column="1" 
+            ItemsSource="{Binding SelectedTablet.Fields}"
+            AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Имя столбца" Binding="{Binding Title}"/>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>
+                <DataGridCheckBoxColumn Header="В запросе" Binding="{Binding InQerry}"/>
+                <DataGridCheckBoxColumn Header="В условии" Binding="{Binding InCodition}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Command="{Binding AddTabletCommand}">Добавить</Button>
+    </Grid>
+    
+</Window>
