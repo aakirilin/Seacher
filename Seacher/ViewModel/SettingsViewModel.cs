@@ -4,6 +4,7 @@ using Seacher.Models;
 using Seacher.Windows;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -49,7 +50,10 @@ namespace Seacher.ViewModel
             set
             {
                 SetProperty(ref selectedTablet, value);
-                AppSettings.SelectTableName = value?.Name ?? "";
+                /*
+                var selectTable = dBTables.First(t => t.Name.Equals(value.Name));
+                var selectTableindex = dBTables.ElementAt(selectTable);
+                */
             }
         }
 
@@ -116,7 +120,7 @@ namespace Seacher.ViewModel
                 var selectTable = (DBTable)SelectedTablet ?? tables.FirstOrDefault();
 
                 AppSettings.DBTables = tables;
-                AppSettings.SelectTableName = selectedTablet.Name;
+                //AppSettings.SelectTableIndex = Select
 
                 var serializer = new SettingsSerializerSQlite();
                 serializer.Serialize(AppSettings);
@@ -130,9 +134,8 @@ namespace Seacher.ViewModel
 
             var tables = appSettings.DBTables?.Select(t => new DBTableViewModel(t));
             DBTables = new ObservableCollection<DBTableViewModel>(tables ?? new List<DBTableViewModel>());
-            var selectTableName = appSettings.SelectTableName;
 
-            SelectedTablet = DBTables.FirstOrDefault(t => t.Name.Equals(selectTableName));
+            SelectedTablet = DBTables[appSettings.SelectTableIndex];
             ConnectionString = appSettings.ConnectionString;
         }
 

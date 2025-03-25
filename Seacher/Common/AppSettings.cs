@@ -10,14 +10,14 @@ namespace Seacher.Common
     public class AppSettings
     {
         public List<DBTable> DBTables { get; set; }
-        public string SelectTableName { get; set; }
         public string ConnectionString { get; set; }
+        public int SelectTableIndex { get; set; }
         public DBMSTypes DBMSType { get; set; }
 
 
         public DBTable SelectTable
         {
-            get => DBTables?.FirstOrDefault(t => t.Name.Equals(SelectTableName));
+            get => DBTables?[SelectTableIndex];
         }
 
         public AppSettings()
@@ -30,7 +30,7 @@ namespace Seacher.Common
             settingsSerializer.Deserialize(ref appSettings);
 
             DBTables = appSettings.DBTables;
-            SelectTableName = appSettings.SelectTableName;
+            SelectTableIndex = appSettings.SelectTableIndex;
             ConnectionString = appSettings.ConnectionString;
             DBMSType = appSettings.DBMSType;
         }

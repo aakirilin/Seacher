@@ -93,27 +93,31 @@ namespace Seacher.Common
         public void ExecuteNonQuery(string qerrys, string delimiter = ";")
         {
             connection.Open();
-            DbCommand command = createDbCommand(); //new Microsoft.Data.Sqlite.SqliteCommand();
-            command.Transaction = connection.BeginTransaction();
+            DbCommand command = null;
             try
             {
-                foreach (var qerry in qerrys.Split(delimiter, StringSplitOptions.TrimEntries))
+                command = createDbCommand();
+                command.Transaction = connection.BeginTransaction();
+                command.Connection = connection;
+                foreach (var qerry in qerrys.Split(delimiter, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    command.Connection = connection;
-                    command.CommandText = qerry;
-                    command.ExecuteNonQuery();
+                    if (!string.IsNullOrWhiteSpace(qerry))
+                    {
+                        command.CommandText = qerry;
+                        command.ExecuteNonQuery();
+                    }
                 }
-                command.Transaction.Commit();
+                command?.Transaction?.Commit();
             }
             catch (Exception ex)
             {
-                command.Transaction.Rollback();
+                command?.Transaction?.Rollback();
                 throw;
             }
             finally
             {
-                connection.Close();
-                command.Dispose();
+                connection?.Close();
+                command?.Dispose();
             }
         }
 
@@ -158,10 +162,11 @@ namespace Seacher.Common
                 where {@params.Condition}
                 """;
 
-            DbCommand command = new Microsoft.Data.Sqlite.SqliteCommand();
-            command.Transaction = connection.BeginTransaction();
+            DbCommand command = null;
             try
             {
+                command = createDbCommand();
+                command.Transaction = connection.BeginTransaction();
                 command.Connection = connection;
                 command.CommandText = qerry;
 
@@ -181,17 +186,16 @@ namespace Seacher.Common
                         }
                     }
                 }
-                command.Transaction.Rollback();
             }
             catch (Exception ex)
-            {
-                command.Transaction.Rollback();
+            {                
                 throw;
             }
             finally
             {
-                connection.Close();
-                command.Dispose();
+                command?.Transaction?.Rollback();
+                connection?.Close();
+                command?.Dispose();
             }
 
             return result;

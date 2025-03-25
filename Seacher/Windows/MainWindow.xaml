@@ -44,7 +44,7 @@
             Grid.Column="1" 
             SelectedIndex="{Binding SelectedIndex}"
             ItemsSource="{Binding DBTablesTitles}"
-            SelectedItem="{Binding SelectTabletTitle}"
+
             HorizontalAlignment="Left"></ComboBox>
     </Grid>
 </Window>

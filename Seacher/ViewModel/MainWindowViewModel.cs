@@ -48,6 +48,9 @@ namespace Seacher.ViewModel
                 if (value >= 0 && value < DBTablesNames.Count)
                 {
                     SelectedTableName = DBTablesNames[selectedIndex];
+                    appSettings.SelectTableIndex = value;
+                    var serializer = new SettingsSerializerSQlite();
+                    serializer.Serialize(appSettings);
                     OnPropertyChanged(nameof(SelectedTableName));
                 }
             }
@@ -152,8 +155,7 @@ namespace Seacher.ViewModel
 
         public MainWindowViewModel(AppSettings appSettings, IServiceProvider serviceProvider)
         {
-            this.appSettings = appSettings;
-            SelectedTableTitle = appSettings.SelectTableName;
+            this.appSettings = appSettings;        
             this.serviceProvider = serviceProvider;
             sQLiteAdapter = SQLAdapter.Create(appSettings.DBMSType, appSettings.ConnectionString);
 
@@ -218,6 +220,7 @@ namespace Seacher.ViewModel
                 .Select(t => t.Title)?
                 .ToList();
 
+            SelectedIndex = appSettings.SelectTableIndex;
             CreateInputFields(appSettings?.SelectTable?.Fields ?? new List<DBField>());
         }
 

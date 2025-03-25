@@ -21,7 +21,11 @@ namespace Seacher.Common
         {
             { 1001, """
                 INSERT INTO setting (name, sValue) values ('DBCSType', 'SQLight');
-                """}
+                """},
+            { 1002, """
+                DELETE FROM setting WHERE name = 'selTableName';
+                INSERT INTO setting (name, iValue) values ('selectTableIndex', 0);
+                """ }
         };
 
         public SettingsSerializerSQlite() 
@@ -126,7 +130,7 @@ namespace Seacher.Common
             var qerry = $"""
                 UPDATE setting SET sValue = '{AppVersion()}' WHERE name = 'version';
                 UPDATE setting SET sValue = '{settings.ConnectionString}' WHERE name = 'cs';
-                UPDATE setting SET sValue = '{settings.SelectTableName}' WHERE name = 'selTableName';
+                UPDATE setting SET iValue = '{settings.SelectTableIndex}' WHERE name = 'selectTableIndex';
                 UPDATE setting SET sValue = '{settings.DBMSType.ToString()}' WHERE name = 'DBCSType';
                 """;
             adapter.ExecuteNonQuery(qerry);
@@ -179,7 +183,7 @@ namespace Seacher.Common
 
             var version = globalSettings["version"].SValue;
             result.ConnectionString = globalSettings["cs"].SValue;
-            result.SelectTableName = globalSettings["selTableName"].SValue;
+            result.SelectTableIndex = globalSettings["selectTableIndex"].IValue;
             result.DBMSType = Enum.Parse<DBMSTypes>(globalSettings["DBCSType"].SValue);
 
             @params.Tablets = ["tablets"];
