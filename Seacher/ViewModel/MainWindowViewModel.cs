@@ -19,11 +19,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Seacher.ViewModel
 {
-    /*
-        если загружается настроки то нужно обновить список имен таблиц и выбранную таблицу
-        при этом нужно выбирать только главные таблицы 
-    
-     */
     public class MainWindowViewModel : BaseViewModel, IDisposable
     {
         private SQLAdapter sQLiteAdapter;
@@ -51,6 +46,7 @@ namespace Seacher.ViewModel
                     appSettings.SelectTableIndex = value;
                     var serializer = new SettingsSerializerSQlite();
                     serializer.Serialize(appSettings);
+                    CreateInputFields();
                     OnPropertyChanged(nameof(SelectedTableName));
                 }
             }
@@ -164,7 +160,6 @@ namespace Seacher.ViewModel
             serializerSQlite.CreateDB();
 
             DBTablesNames = new List<string>();
-            LoadSettings();
 
             OpenSettingsCommand = new Command((p) =>
             {
@@ -201,6 +196,8 @@ namespace Seacher.ViewModel
 
                 Data = sQLiteAdapter.ExecuteReader(type, @params);
             });
+
+            LoadSettings();
         }
 
         public ICommand OpenSettingsCommand { get; }
@@ -221,21 +218,29 @@ namespace Seacher.ViewModel
                 .ToList();
 
             SelectedIndex = appSettings.SelectTableIndex;
-            CreateInputFields(appSettings?.SelectTable?.Fields ?? new List<DBField>());
+            CreateInputFields();
         }
 
-        public void CreateInputFields(IEnumerable<DBField> fields)
+        public Action<List<Control>> OnCreateInputFields;
+        public void CreateInputFields()
         {
+            var fields = appSettings?.SelectTable?.Fields ?? new List<DBField>();
+            List<Control> inputFields = new List<Control>();
             foreach (var field in fields)
             {
                 var control = new Control();
                 switch (field.ConditionType)
                 {
-                    case ConditionTypes.String: control = new TextBox(); break;
+                    case ConditionTypes.String: control = new TextBox() { Width = 120 }; break;
                     case ConditionTypes.Bool: control = new CheckBox(); break;
                     case ConditionTypes.ComboBox: control = new ComboBox(); break;
                 }
+                var grBox = new GroupBox();
+                grBox.Header = field.Title;
+                grBox.Content = control;
+                inputFields.Add(grBox);
             }
+            OnCreateInputFields?.Invoke(inputFields);
         }
 
         public void Dispose()

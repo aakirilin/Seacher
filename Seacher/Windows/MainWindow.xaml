@@ -32,8 +32,8 @@
             Grid.Row="2" 
             Orientation="Horizontal" 
             FlowDirection="LeftToRight" 
-            Name="FieldsPanel"      
-            />
+            Name="FieldsPanel">
+        </WrapPanel>
         <Button 
             Grid.Row="3" 
             Background="AliceBlue" 

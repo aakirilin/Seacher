@@ -19,13 +19,14 @@ namespace Seacher.Windows
     {
         public MainWindow(MainWindowViewModel viewModel)
         {
+            viewModel.OnCreateInputFields += (controls) =>
+            {
+                FieldsPanel.Children.Clear();
+                controls.ForEach(c => { FieldsPanel.Children.Add(c); });                
+            };
             InitializeComponent();
-
             DataContext = viewModel;
-            var binding = new Binding("");
-            binding.Source = this;
-            
-            //FieldsPanel.Children = new Object();
+            viewModel.CreateInputFields();
         }
     }
 }
